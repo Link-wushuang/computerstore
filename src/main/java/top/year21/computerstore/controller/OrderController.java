@@ -25,6 +25,16 @@ public class OrderController extends BaseController{
     @Autowired
     private IOrderService orderService;
 
+  @PostMapping("/confirm")
+  public JsonResult<Order> confirmOrder(Integer aid, Long totalPrice, HttpSession session) {
+      return createOrder(aid, totalPrice, session);
+  }
+
+  @GetMapping("/list")
+  public JsonResult<List<OrderVo>> getOrderList(HttpSession session, Integer status) {
+      return queryOrderVoByUid(session, status);
+  }
+
     /**
      * Description : 处理用户创建order订单的请求
      * @date 2022/7/18
