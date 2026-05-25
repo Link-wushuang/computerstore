@@ -1,27 +1,106 @@
 /*表格文字居中*/
 .cart-table {
 	text-align: center;
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
 }
-/*表头文字居中*/
+/*表头*/
 .cart-table th {
 	text-align: center;
+	padding: 16px;
+	border-bottom: 1px solid var(--line-soft);
+	color: var(--ink-strong);
+	font-weight: bold;
 }
+/*行内元素排列与样式*/
+.cart-table td {
+	padding: 16px;
+	vertical-align: middle;
+	background: var(--bg-card-strong);
+	border-bottom: 1px solid var(--line-soft);
+}
+.cart-table tbody tr:hover td {
+	background: var(--bg-card);
+}
+/*首尾圆角*/
+.cart-table tbody tr:first-child td:first-child {
+	border-top-left-radius: var(--radius-md);
+}
+.cart-table tbody tr:first-child td:last-child {
+	border-top-right-radius: var(--radius-md);
+}
+.cart-table tbody tr:last-child td:first-child {
+	border-bottom-left-radius: var(--radius-md);
+}
+.cart-table tbody tr:last-child td:last-child {
+	border-bottom-right-radius: var(--radius-md);
+}
+
 /*数量数字居中*/
-.cart-table input {
+.cart-table input[type="text"] {
 	text-align: center;
+	border: 1px solid var(--line-soft);
+	border-radius: var(--radius-sm);
+	padding: 4px;
+	width: 40px;
+	color: var(--ink-strong);
 }
 /*加减按钮宽度*/
 .num-btn {
-	width: 30px;
+	width: 32px;
+	height: 32px;
+	border: 1px solid var(--line-soft);
+	background: var(--bg-base);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: background 0.2s;
+	color: var(--ink-strong);
+	font-weight: bold;
+	margin: 0 4px;
 }
-/*每行间隙*/
-.cart-table tbody tr {
-	border-top: 1px dashed #cccccc;
+.num-btn:hover {
+	background: var(--accent-pale);
+	border-color: var(--accent);
 }
+
 /*总价条*/
 .total-bar {
-	margin: 20px 0;
-	background-color: #f0f7fe;
-	padding: 15px;
-	border-radius: 5px;
+	margin: 24px 0;
+	background-color: var(--bg-card-strong);
+	padding: 20px 24px;
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-card);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--ink-strong);
+	border: 1px solid var(--line-soft);
+}
+
+.total-bar span {
+	font-size: 16px;
+}
+
+.total-bar #selectCount,
+.total-bar #selectTotal {
+	color: var(--accent-deep);
+	font-weight: bold;
+	font-size: 18px;
+	margin: 0 8px;
+}
+
+.btn-primary.link-account {
+	background-color: var(--accent);
+	border: none;
+	border-radius: var(--radius-xl);
+	padding: 12px 32px;
+	font-size: 18px;
+	transition: all 0.3s;
+	box-shadow: var(--shadow-card);
+}
+
+.btn-primary.link-account:hover {
+	background-color: var(--accent-deep);
+	transform: translateY(-2px);
 }
