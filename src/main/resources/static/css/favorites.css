@@ -1,19 +1,126 @@
+/*收藏页面样式*/
+.favorites-container {
+	padding: 40px 0;
+}
 /*商品列表图片的样式*/
 .img-search {}
-/*商品框的样式*/
+
+/*商品框的样式卡片化*/
 .goods-panel {
 	width: 100%;
-	border: 1px solid#eeeeee;
-	box-shadow: 0px 0px 0px #888888;
-	padding: 3px;
-	padding-bottom: 10px;
+	background: var(--bg-card-strong);
+	border: 1px solid var(--line-soft);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-card);
+	padding: 16px;
 	margin-bottom: 30px;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
 }
-/*商品价格的样式*/
-.goods-panel h4 {
-	color: red;
+
+.goods-panel:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--shadow-soft);
+	border-color: var(--accent);
 }
+
+.goods-panel img {
+	border-radius: var(--radius-sm);
+	margin-bottom: 12px;
+	width: 100%;
+	object-fit: cover;
+}
+
 /*商品名称的样式*/
-.goods-panel h5 {
-	height: 60px;
+.goods-panel .text-row-3 {
+	height: 48px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	margin-bottom: 10px;
+}
+
+.goods-panel a small {
+	color: var(--ink-strong);
+	font-size: 14px;
+	font-weight: 500;
+	transition: color 0.2s;
+}
+.goods-panel a:hover small {
+	color: var(--accent-deep);
+}
+
+/*商品价格的样式*/
+.goods-panel p {
+	color: var(--accent-deep);
+	font-size: 18px;
+	font-weight: bold;
+	margin: 8px 0;
+}
+
+/*按钮组*/
+.goods-panel .btn-group-custom {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.goods-panel .btn-group-custom .btn {
+	flex: 1;
+	border-radius: var(--radius-lg);
+	font-size: 12px;
+	padding: 6px 0;
+}
+
+.goods-panel .btn-group-custom .add-fav {
+	background: var(--bg-base);
+	color: var(--ink-soft);
+	border-color: transparent;
+}
+.goods-panel .btn-group-custom .add-fav:hover {
+	background: #ffe3e3;
+	color: #d93d3d;
+}
+
+.goods-panel .btn-group-custom .add-cart {
+	background: var(--accent-pale);
+	color: var(--accent-deep);
+	border-color: transparent;
+}
+.goods-panel .btn-group-custom .add-cart:hover {
+	background: var(--accent);
+	color: #fff;
+}
+
+/*分页样式*/
+.pagination-custom {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	margin-top: 24px;
+}
+.pagination-custom a {
+	display: inline-block;
+	padding: 8px 16px;
+	background: var(--bg-card-strong);
+	border: 1px solid var(--line-soft);
+	border-radius: var(--radius-sm);
+	color: var(--ink-strong);
+	transition: all 0.2s;
+}
+.pagination-custom a:hover {
+	background: var(--bg-soft);
+	border-color: var(--accent);
+}
+.pagination-custom a[disabled] {
+	background: var(--accent-deep);
+	color: #fff;
+	border-color: var(--accent-deep);
+	pointer-events: none;
 }

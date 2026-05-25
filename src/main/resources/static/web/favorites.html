@@ -80,18 +80,16 @@
 					collectListStr = "<div class=\"col-md-3\">"
 							+ "<div class=\"goods-panel\">"
 							+ "<img src=.." + favorite.image + "collect.png" + "  class=\"img-responsive\" />"
-							+ "<p>￥" + favorite.price  + ".00" + "</p>"
 							+ "<div class=\"text-row-3\">"
 							+ "<a href=product.html?pid=" + favorite.pid
 							+ "><small>"
 							+ favorite.title
 							+ "</small></a></div>"
-							+ "<span style='padding-right: 10px'>"
-							+ "<a href='javascript:void(0)' onclick='stopCollect(#{fid})'  class='btn btn-default btn-xs add-fav'><span class='fa fa-heart'></span>取消收藏</a>"
-							+ "</span>"
-							+ "<span style='padding-right: 10px'>"
-							+ "<a href='javascript:void(0)' onclick='addCollectToCart(#{pid},#{price})' class=\"btn btn-default btn-xs add-cart\"><span class=\"fa fa-cart-arrow-down\"></span>加入购物车</a>"
-							+ "</span></div></div>"
+							+ "<p>￥" + favorite.price  + ".00" + "</p>"
+							+ "<div class=\"btn-group-custom\">"
+							+ "<a href='javascript:void(0)' onclick='stopCollect(#{fid})'  class='btn btn-default btn-xs add-fav'><span class='fa fa-heart'></span> 取消</a>"
+							+ "<a href='javascript:void(0)' onclick='addCollectToCart(#{pid},#{price})' class=\"btn btn-default btn-xs add-cart\"><span class=\"fa fa-cart-arrow-down\"></span> 加入购物车</a>"
+							+ "</div></div></div>"
 
 					collectListStr = collectListStr.replaceAll("#{fid}",favorite.fid)
 					collectListStr = collectListStr.replaceAll("#{pid}",favorite.pid)
@@ -109,13 +107,13 @@
 				nextPage = res.data.nextPage //下一页
 				navigatepageNums = res.data.navigatepageNums //分页栏的数字
 
-				let firstPage = "<a id='first' href='#' onclick='PaginationListSelect(prePage,pageSize)' style='padding-right: 8px'>上一页</a>"
-				let lastPage = "<a id='end' href='javascript:void(0)' onclick='PaginationListSelect(nextPage,pageSize)' style='padding-right: 8px'>下一页</a>"
-				let PaginationListStr = "";
+				let firstPage = "<a id='first' href='#' onclick='PaginationListSelect(prePage,pageSize)'>上一页</a>"
+				let lastPage = "<a id='end' href='javascript:void(0)' onclick='PaginationListSelect(nextPage,pageSize)'>下一页</a>"
+				let PaginationListStr = "<div class='pagination-custom'>";
 				//判断是否是第一页
 				if (res.data.isFirstPage){ //为true表示当前是第一页
 					firstPage = "<a id='first' href='javascript:void(0)' "
-							+ "style='opacity: 0.2;padding-right: 8px;color: black'>上一页</a>"
+							+ "style='opacity: 0.5;'>上一页</a>"
 					PaginationListStr += firstPage;
 				}else { //为false表示当前不是第一页
 					PaginationListStr += firstPage;
@@ -127,10 +125,10 @@
 					let nowNum = navigatepageNums[i]
 					if (nowNum === pageNum){ //相等表示i的次数和当前也相同，对页数显示做变化
 						PaginationListStr += "<a href='javascript:void(0)' " +
-								"style='padding-right: 8px;color: black' disabled='disabled'>" + "【"  + nowNum + "】" +"</a>"
+								" disabled='disabled'>" + nowNum +"</a>"
 					}else {
 						PaginationListStr += "<a href='javascript:void(0)' onclick='PaginationListSelect(#{nowNum},pageSize)' " +
-								"style='padding-right: 8px'>" + nowNum +"</a>"
+								">" + nowNum +"</a>"
 					}
 					PaginationListStr = PaginationListStr.replaceAll("#{nowNum}",nowNum)
 
@@ -139,9 +137,10 @@
 				if (!res.data.isLastPage){ //取反为false表示当前是末页
 					PaginationListStr += lastPage;
 				}else { //为true表示当前是末页
-					lastPage =  "<a id='end' href='javascript:void(0)' style='opacity: 0.2;padding-right: 8px;color: black'>下一页</a>"
+					lastPage =  "<a id='end' href='javascript:void(0)' style='opacity: 0.5;'>下一页</a>"
 					PaginationListStr += lastPage;
 				}
+				PaginationListStr += "</div>"
 				//将拼接的str串插入指定id处
 				$("#PaginationList").append(PaginationListStr)
 			}
@@ -159,7 +158,7 @@
 							//从showPageDataIntoHtml.js中导入的方法
 							addDataIntoList(res)
 						}else { //代表没数据
-							$("#resultText").empty().html("暂无收藏商品，先去逛逛吧！")
+							$("#resultText").empty().html("<span class='fa fa-heart'></span> 暂无收藏商品，去看看有没有喜欢的吧！")
 						}
 
 					},
@@ -192,30 +191,22 @@
 		<div class="middleNavigation"></div>
 		<!--中间导航条结束-->
 
-		<div class="col-md-offset-2" style="padding-bottom: 20px;">
-			<h5 id="resultText" style="font-weight: bolder;color: red">
-				以下是你的收藏商品：
-			</h5>
-		</div>
+		<div class="container favorites-container">
+			<div class="col-md-offset-1 col-md-10" style="margin-bottom: 24px;">
+				<h4 id="resultText" style="color: var(--ink-strong); font-weight: bold; border-left: 4px solid var(--accent); padding-left: 12px;"><span class="fa fa-heart"></span> 以下是你的收藏商品：</h4>
+			</div>
 
-		<div class="container">
-			<div id="collectList" class="col-md-offset-1 col-md-10">
+			<div id="collectList" class="col-md-offset-1 col-md-10 row" style="display: flex; flex-wrap: wrap;">
 			<!--		待填充内容		-->
 
 			</div>
 
-			<div class="col-md-offset-1 col-md-10">
+			<div class="col-md-offset-1 col-md-10" style="margin-top: 20px;">
 				<p id="PaginationList" align="center">
 					<!--		待填充内容		-->
 				</p>
 			</div>
-
-
 		</div>
-
-
-
-
 
 		<div class="clearfix"></div>
 		<!--页脚开始-->

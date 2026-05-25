@@ -290,8 +290,8 @@
 								}
 
 						}else{
-							str = "<tr><td colspan='12' style='font-weight: bold;color: red;padding: 20px;font-size: medium'>" +
-									"购物车暂无商品，请先去添加商品</td></tr>"
+							str = "<tr><td colspan='12' style='font-weight: bold;color: var(--accent-deep);padding: 40px;font-size: medium'>" +
+									"购物车暂无商品，去挑选看看吧~</td></tr>"
 							$("#cart-list").empty().append(str)
 						}
 					},
@@ -316,11 +316,11 @@
 
 		<div class="container">
 			<div class="col-md-offset-1 col-md-10">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<p class="panel-title"><span class="fa fa-shopping-cart"></span> 购物车</p>
+				<div class="panel" style="border: none; box-shadow: var(--shadow-card); border-radius: var(--radius-lg); background: var(--bg-card-strong); overflow: hidden;">
+					<div class="panel-heading" style="background: var(--bg-soft); border-bottom: 1px solid var(--line-soft); padding: 20px;">
+						<p class="panel-title" style="color: var(--ink-strong); font-size: 18px; font-weight: bold;"><span class="fa fa-shopping-cart"></span> 购物车</p>
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" style="padding: 24px;">
 						<form id="goToOrderConfirm"
 							  action="orderConfirm.html"
 							  onsubmit="return checkIsNotChoose()"
@@ -347,8 +347,8 @@
 							<div class="total-bar">
 								<a href="javascript:void(0)" onclick="selDelCart()" class="cart-del-sel btn btn-default btn-xs">删除所选商品</a>
 								<span class="pull-right">已选商品
-								<span id="selectCount" style="color: red">0</span>&nbsp;件 总价¥
-								<span id="selectTotal" style="color: red;">0</span>&nbsp;元
+								<span id="selectCount">0</span>&nbsp;件 总价¥
+								<span id="selectTotal">0</span>&nbsp;元
 								</span>
 							</div>
 							<div>
