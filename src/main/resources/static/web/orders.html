@@ -176,18 +176,12 @@
 				}
 			}
 
-				function goToPay(oid){
-		// 统一流程：直接跳支付宝支付
-		$.ajax({
-			url: "/order/queryOrder",
-			type: "get",
-			data: { oid: oid },
-			success: function(res){
-				let totalPrice = res.data.totalPrice;
-				location.href = "/alipay/pay?oid=" + oid + "&totalPrice=" + totalPrice;
+			//让未付款的订单跳转到付款界面
+			function goToPay(oid){
+				let url = "payment.html?oid=" + oid
+				location.href = url;
 			}
-		})
-	}
+
 			//根据用户id和订单类型查询
 			function getUserOrderByUid(status){
 				$.ajax({

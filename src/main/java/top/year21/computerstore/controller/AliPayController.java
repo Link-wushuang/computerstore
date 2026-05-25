@@ -37,30 +37,6 @@ public class AliPayController {
     @Autowired
     private AlipayConfig alipayConfig;
 
-    @ResponseBody
-    @GetMapping("/payNew")
-    public String payNew(String outTradeNo, String totalAmount, String subject, HttpServletRequest request) throws Exception {
-        AlipayClient alipayClient = new DefaultAlipayClient(
-                alipayConfig.getGatewayUrl(),
-                alipayConfig.getAppId(),
-                alipayConfig.getAppPrivateKey(),
-                "json",
-                alipayConfig.getCharset(),
-                alipayConfig.getAlipayPublicKey(),
-                alipayConfig.getSignType()
-        );
-
-        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(alipayConfig.getReturnUrl());
-        alipayRequest.setNotifyUrl(alipayConfig.getNotifyUrl());
-
-        alipayRequest.setBizContent("{\"out_trade_no\":\"" + outTradeNo + "\","
-                + "\"total_amount\":\"" + totalAmount + "\","
-                + "\"subject\":\"" + subject + "\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-
-        return alipayClient.pageExecute(alipayRequest).getBody();
-    }
 
     /**
      * Description : 处理在线支付的请求
