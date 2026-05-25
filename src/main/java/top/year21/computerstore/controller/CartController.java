@@ -1,135 +1,114 @@
-// CartController.java
-package com.example.demo.controller;
+package top.year21.computerstore.controller;
 
-import com.example.demo.common.Result;
-import com.example.demo.service.CartService;
-import com.example.demo.vo.CartItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import top.year21.computerstore.entity.Cart;
+import top.year21.computerstore.service.ICartService;
+import top.year21.computerstore.service.exception.InsertException;
+import top.year21.computerstore.utils.JsonResult;
+import top.year21.computerstore.vo.CartVo;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * @author hcxs1986
+ * @version 1.0
+ * @description: 处理购物车相关请求的控制器
+ * @date 2022/7/17 0:52
+ */
 @RestController
-@RequestMapping("/api/cart")
-public class CartController {
-    
+@RequestMapping("/cart")
+public class CartController extends BaseController{
     @Autowired
-    private CartService cartService;
-    
-    // 获取当前用户ID（实际项目中从Session或Token获取）
-    private Long getCurrentUserId(HttpSession session) {
-        // 模拟获取用户ID，实际应从session或JWT中获取
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            // 测试用，生产环境应返回401
-            return 1L;
-        }
-        return userId;
-    }
-    
-    @GetMapping("/list")
-    public Result<List<CartItemVO>> getCartList(HttpSession session) {
-        Long userId = getCurrentUserId(session);
-        List<CartItemVO> cartList = cartService.getCartList(userId);
-        return Result.success(cartList);
-    }
-    
-    @PutMapping("/quantity/{cartId}")
-    public Result<?> updateQuantity(@PathVariable Long cartId, 
-                                    @RequestParam Integer quantity,
-                                    HttpSession session) {
-        if (quantity == null || quantity < 1) {
-            return Result.error("数量必须大于0");
-        }
-        Long userId = getCurrentUserId(session);
-        boolean success = cartService.updateQuantity(userId, cartId, quantity);
-        if (success) {
-            return Result.success("更新成功");
-        } else {
-            return Result.error("更新失败，请重试");
-        }
-    }
-    
-    @DeleteMapping("/items")
-    public Result<?> deleteCartItems(@RequestBody Map<String, List<Long>> params, HttpSession session) {
-        List<Long> cartIds = params.get("cartIds");
-        if (cartIds == null || cartIds.isEmpty()) {
-            return Result.error("请选择要删除的商品");
-        }
-        Long userId = getCurrentUserId(session);
-        boolean success = cartService.deleteCartItems(userId, cartIds);
-        if (success) {
-            return Result.success("删除成功");
-        } else {
-            return Result.error("删除失败");
-        }
-    }
-}
+    private ICartService cartService;
 
-// FavoritesController.java
-package com.example.demo.controller;
+    /**
+     * Description : 处理添加购物车的请求
+     * @date 2022/7/19
+     * @param cart cart实体类
+     * @param session 项目启动时自动生成的session对象
+     * @return top.year21.computerstore.utils.JsonResult<java.lang.Void>
+     **/
+    @PostMapping("/addCart")
+    public JsonResult<Void> addCart(Cart cart, HttpSession session){
+        //从session中区域uid和用户名
+        Integer uid = getUserIdFromSession(session);
+        String username = getUsernameFromSession(session);
+        cart.setUid(uid);
+        Date date = new Date();
+        int result = cartService.addCart(cart, username, date, username, date);
 
-import com.example.demo.common.Result;
-import com.example.demo.service.FavoritesService;
-import com.example.demo.vo.FavoriteVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+        if (result == 0){
+            throw  new InsertException("服务器或数据库异常，加入购物车失败");
+        }
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+        return new JsonResult<>(OK);
+    }
 
-@RestController
-@RequestMapping("/api/favorites")
-public class FavoritesController {
-    
-    @Autowired
-    private FavoritesService favoritesService;
-    
-    private Long getCurrentUserId(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return 1L;
-        }
-        return userId;
+    /**
+     * Description : 处理查询用户购物车信息的请求
+     * @date 2022/7/17
+     * @param session 项目启动时自动生成的session对象
+     * @return top.year21.computerstore.utils.JsonResult<java.util.List<top.year21.computerstore.entity.Cart>>
+     **/
+    @GetMapping("/showCarts")
+    public JsonResult<List<CartVo>> showCarts(HttpSession session){
+        Integer uid = getUserIdFromSession(session);
+        List<CartVo> carts = cartService.queryCartByUid(uid);
+
+        return new JsonResult<>(OK,carts);
     }
-    
-    @GetMapping("/list")
-    public Result<List<FavoriteVO>> getFavoritesList(HttpSession session) {
-        Long userId = getCurrentUserId(session);
-        List<FavoriteVO> favorites = favoritesService.getFavoritesList(userId);
-        return Result.success(favorites);
+
+    /**
+     * Description : 处理更新购物车数量信息的请求
+     * @date 2022/7/18
+     * @param num 更新的数量
+     * @param cid cart的cid信息
+     * @param session 项目启动时自动生成的session对象
+     * @return top.year21.computerstore.utils.JsonResult<java.lang.Void>
+     **/
+    @PostMapping("/updateCart")
+    public JsonResult<Void> updateCateByCid(Integer num,Integer cid,HttpSession session){
+        String modifiedUser = getUsernameFromSession(session);
+        Date modifiedTime = new Date();
+        cartService.updateCartNumByCid(num,modifiedUser,modifiedTime,cid);
+        return new JsonResult<>(OK);
     }
-    
-    @PostMapping("/add-to-cart")
-    public Result<?> addToCartFromFavorites(@RequestBody Map<String, List<Long>> params, HttpSession session) {
-        List<Long> favoriteIds = params.get("favoriteIds");
-        if (favoriteIds == null || favoriteIds.isEmpty()) {
-            return Result.error("请选择要加入购物车的商品");
+
+    /**
+     * Description : 处理cids数组的内容查询cart信息的请求
+     * @date 2022/7/18
+     * @param cids 查询的cids数组
+     * @return top.year21.computerstore.utils.JsonResult<java.util.List<top.year21.computerstore.entity.Cart>>
+     **/
+    @GetMapping("/queryCids")
+    public JsonResult<List<CartVo>> queryCids(Integer[] cids){
+        List<CartVo> list = cartService.queryCartByCids(cids);
+        System.out.println(list.toString());
+        if (list.size() == 0){
+            return new JsonResult<>(9001);
         }
-        Long userId = getCurrentUserId(session);
-        boolean success = favoritesService.addToCartFromFavorites(userId, favoriteIds);
-        if (success) {
-            return Result.success("成功加入购物车");
-        } else {
-            return Result.error("加入购物车失败");
-        }
+        return new JsonResult<>(OK,list);
     }
-    
-    @DeleteMapping("/items")
-    public Result<?> deleteFavorites(@RequestBody Map<String, List<Long>> params, HttpSession session) {
-        List<Long> favoriteIds = params.get("favoriteIds");
-        if (favoriteIds == null || favoriteIds.isEmpty()) {
-            return Result.error("请选择要删除的收藏");
+
+    /**
+     * Description : 处理根据cids内的指定cid删除cart的请求
+     * @date 2022/7/19
+     * @param cids 存储要被删除的cart的cid
+     * @return top.year21.computerstore.utils.JsonResult<java.lang.Void>
+     **/
+    @PostMapping("/deleteCart")
+    public JsonResult<Void> deleteCartByCid(Integer[] cids){
+        //遍历执行删除操作
+        for (Integer cid: cids) {
+            cartService.deleteCartByCid(cid);
         }
-        Long userId = getCurrentUserId(session);
-        boolean success = favoritesService.deleteFavorites(userId, favoriteIds);
-        if (success) {
-            return Result.success("删除成功");
-        } else {
-            return Result.error("删除失败");
-        }
+
+        return new JsonResult<>(OK);
     }
+
 }

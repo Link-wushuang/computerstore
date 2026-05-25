@@ -1,34 +1,35 @@
-// Result.java
-package com.example.demo.common;
+package top.year21.computerstore.utils;
 
-public class Result<T> {
-    private int code;
-    private String msg;
-    private T data;
-    
-    public Result(int code, String msg, T data) {
-        this.code = code;
-        this.msg = msg;
+import lombok.Data;
+
+/**
+ * @author hcxs1986
+ * @version 1.0
+ * @description: 响应数据
+ * @date 2022/7/10 23:37
+ */
+@Data
+public class JsonResult<E> {
+    //响应状态码 200-成功 4000-用户名重复 5000-数据库或服务器异常
+    private int status;
+    //响应信息
+    private String message;
+    //响应数据
+    private E data;
+
+    public JsonResult() {
+    }
+
+    public JsonResult(int status) {
+        this.status = status;
+    }
+
+    public JsonResult(Throwable e) {
+        this.message = e.getMessage();
+    }
+
+    public JsonResult(int status, E data) {
+        this.status = status;
         this.data = data;
     }
-    
-    public static <T> Result<T> success(T data) {
-        return new Result<>(200, "success", data);
-    }
-    
-    public static <T> Result<T> success(String msg) {
-        return new Result<>(200, msg, null);
-    }
-    
-    public static <T> Result<T> error(String msg) {
-        return new Result<>(500, msg, null);
-    }
-    
-    // getters and setters
-    public int getCode() { return code; }
-    public void setCode(int code) { this.code = code; }
-    public String getMsg() { return msg; }
-    public void setMsg(String msg) { this.msg = msg; }
-    public T getData() { return data; }
-    public void setData(T data) { this.data = data; }
 }
